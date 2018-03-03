@@ -193,7 +193,7 @@ nav h1 a {
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
+  /* min-height: 248px; */
   min-width: 100%;
 }
 #restaurants-list li h1 {
@@ -318,4 +318,18 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+@media only screen and (max-width: 600px) {
+  .filter-options select {
+    width: 320px;
+  }
+  .filter-options {
+    flex-wrap: wrap;
+  }
+  .filter-options h2 {
+    width: 320px;
+    margin-top: 20px;
+    text-align: center;
+  }
 }
