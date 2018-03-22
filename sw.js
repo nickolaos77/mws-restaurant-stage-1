@@ -38,13 +38,15 @@
 //   })
 // ))
 
-self.addEventListener('fetch', event=>{
-  if (event.request.url.endsWith('.jpg')){
-    fetch(event.request).then(response=>{
-      // if (!response.ok)
-      caches.open('restaurants-static-v1').then(cache=>{
-        cache.add(event.request.url, response)
-      })
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.open('restaurants-static-v2').then(function(cache) {
+      return cache.match(event.request).then(function (response) {
+        return response || fetch(event.request).then(function(response) {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
     })
-  }
-})
+  );
+});
