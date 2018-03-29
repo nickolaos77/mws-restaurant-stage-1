@@ -38,9 +38,11 @@
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNTK9pGwNgS1za5Nr-J94pYC32EGLD58s&libraries=places&callback=initMap"></script>
   <script type="application/javascript">
   if (navigator.serviceWorker) {
-    navigator.serviceWorker.register("/sw.js").then(()=>console.log("Yeah"), (error)=>console.log(error))
-  }
-  </script>
+  navigator.serviceWorker
+    .register("/sw.js")
+    .then(() => console.log("Yeah"), error => console.log(error));
+}
+</script>
   <footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>

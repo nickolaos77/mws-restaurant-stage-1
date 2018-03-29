@@ -90,6 +90,7 @@ fillRestaurantHoursHTML = (
 
     const time = document.createElement("td");
     time.innerHTML = operatingHours[key];
+    time.classList.add("hours");
     row.appendChild(time);
 
     hours.appendChild(row);
@@ -142,12 +143,13 @@ createReviewHTML = review => {
   return li;
 };
 
-/**
+/**element.setAttribute('foo', value);
  * Add restaurant name to the breadcrumb navigation menu
  */
 fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById("breadcrumb");
   const li = document.createElement("li");
+  li.setAttribute("aria-current", "page");
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
 };
