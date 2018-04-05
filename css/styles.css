@@ -357,12 +357,12 @@ nav h1 a {
   }
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 1200px) {
   header,
   nav,
   main,
   footer {
-    width: 900px;
+    width: 1200px;
     margin: auto;
   }
 }
