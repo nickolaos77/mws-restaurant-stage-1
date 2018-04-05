@@ -6,6 +6,7 @@
       "neighborhood": "Manhattan",
       "photograph": "1.jpg",
       "photograph_small": "1s.jpg",
+      "photograph_medium": "1m.jpg",
       "alt": "the dining area at a crowded night",
       "address": "171 E Broadway, New York, NY 10002",
       "latlng": {
@@ -52,6 +53,7 @@
       "neighborhood": "Brooklyn",
       "photograph": "2.jpg",
       "photograph_small": "2s.jpg",
+      "photograph_medium": "2m.jpg",
       "address": "919 Fulton St, Brooklyn, NY 11238",
       "alt": "whole pizza on a plate on a wooden surface",
       "latlng": {
@@ -98,6 +100,7 @@
       "neighborhood": "Manhattan",
       "photograph": "3.jpg",
       "photograph_small": "3s.jpg",
+      "photograph_medium": "3m.jpg",
       "alt": "the dining area empty of people",
       "address": "1 E 32nd St, New York, NY 10016",
       "latlng": {
@@ -144,6 +147,7 @@
       "neighborhood": "Manhattan",
       "photograph": "4.jpg",
       "photograph_small": "4s.jpg",
+      "photograph_medium": "4m.jpg",
       "alt": "street view of the corner entrance",
       "address": "205 E Houston St, New York, NY 10002",
       "latlng": {
@@ -190,6 +194,7 @@
       "neighborhood": "Brooklyn",
       "photograph": "5.jpg",
       "photograph_small": "5s.jpg",
+      "photograph_medium": "5m.jpg",
       "alt": "the dining and cooking area at a crowded noon",
       "address": "261 Moore St, Brooklyn, NY 11206",
       "latlng": {
@@ -236,6 +241,7 @@
       "neighborhood": "Brooklyn",
       "photograph": "6.jpg",
       "photograph_small": "6s.jpg",
+      "photograph_medium": "6m.jpg",
       "alt": "the dining area at lunchtime",
       "address": "454 Van Brunt St, Brooklyn, NY 11231",
       "latlng": {
@@ -282,6 +288,7 @@
       "neighborhood": "Manhattan",
       "photograph": "7.jpg",
       "photograph_small": "7s.jpg",
+      "photograph_medium": "7m.jpg",
       "alt": "street view of the restaurant",
       "address": "430 E 9th St, New York, NY 10009",
       "latlng": {
@@ -328,6 +335,7 @@
       "neighborhood": "Manhattan",
       "photograph": "8.jpg",
       "photograph_small": "8s.jpg",
+      "photograph_medium": "8m.jpg",
       "alt": "The Dutch sign",
       "address": "131 Sullivan St, New York, NY 10012",
       "latlng": {
@@ -374,6 +382,7 @@
       "neighborhood": "Queens",
       "photograph": "9.jpg",
       "photograph_small": "9s.jpg",
+      "photograph_medium": "9m.jpg",
       "alt": "people eating",
       "address": "1209 Jackson Ave, Queens, NY 11101",
       "latlng": {
@@ -420,6 +429,7 @@
       "neighborhood": "Queens",
       "photograph": "10.jpg",
       "photograph_small": "10s.jpg",
+      "photograph_medium": "10m.jpg",
       "alt": "the bar and the dining area empty of people",
       "address": "5-48 49th Ave, Queens, NY 11101",
       "latlng": {

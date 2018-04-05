@@ -169,6 +169,13 @@ class DBHelper {
   }
 
   /**
+   * Restaurant medium image URL.
+   */
+  static mediumImageUrlForRestaurant(restaurant) {
+    return `/img/${restaurant.photograph_medium}`;
+  }
+
+  /**
    * Restaurant small image URL.
    */
   static smallImageUrlForRestaurant(restaurant) {
