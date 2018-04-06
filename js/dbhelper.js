@@ -1,3 +1,14 @@
+var altTags = {
+  1:"the dining area at a crowded night",
+  2:"whole pizza on a plate on a wooden surface",
+  3:"the dining area empty of people",
+  4:"street view of the corner entrance" ,
+  5:"the dining and cooking area at a crowded noon",
+  6:"the dining area at lunchtime",
+  7:"street view of the restaurant",
+  8:"The Dutch sign",
+  9:"people eating on a table" ,
+}
 /**
  * Common database helper functions.
  */
@@ -15,21 +26,18 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else {
-        // Oops!. Got an error from server.
-        const error = `Request failed. Returned status of ${xhr.status}`;
-        callback(error, null);
-      }
-    };
-    xhr.send();
+    return fetch("http://localhost:1337/restaurants").
+    then(response=>response.json())
+    .then(data=>{
+      var newData = data.map((restaurant, index)=>{
+        if (restaurant.photograph){
+          restaurant.photograph_small = restaurant.photograph +  "s";
+          restaurant.photograph_medium = restaurant.photograph + "m";
+          restaurant.alt = altTags[restaurant.id]
+        }
+      })
+      callback(null,data)}
+    );
   }
 
   /**
@@ -165,27 +173,28 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return `/img/${restaurant.photograph}`;
+    return restaurant.photograph && `/img/${restaurant.photograph}.jpg`;
   }
 
   /**
    * Restaurant medium image URL.
    */
   static mediumImageUrlForRestaurant(restaurant) {
-    return `/img/${restaurant.photograph_medium}`;
+    return restaurant.photograph && `/img/${restaurant.photograph_medium}.jpg`;
   }
 
   /**
    * Restaurant small image URL.
    */
   static smallImageUrlForRestaurant(restaurant) {
-    return `/img/${restaurant.photograph_small}`;
+    return restaurant.photograph && `/img/${restaurant.photograph_small}.jpg`;
   }
 
   /**
    * Restaurant image alt tag.
    */
   static imageAltTagForRestaurant(restaurant) {
+
     return restaurant.alt;
   }
 
