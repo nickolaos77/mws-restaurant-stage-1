@@ -12,6 +12,11 @@ var altTags = {
 /**
  * Common database helper functions.
  */
+
+var dbPromise = idb.open("restaurantsDb",1, function(upgradeDb){
+  upgradeDb.createObjectStore('restaurants', {keyPath: 'id'}) 
+});
+
 class DBHelper {
   /**
    * Database URL.
@@ -26,18 +31,36 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    return fetch("http://localhost:1337/restaurants").
-    then(response=>response.json())
-    .then(data=>{
-      var newData = data.map((restaurant, index)=>{
-        if (restaurant.photograph){
-          restaurant.photograph_small = restaurant.photograph +  "s";
-          restaurant.photograph_medium = restaurant.photograph + "m";
-          restaurant.alt = altTags[restaurant.id]
-        }
-      })
-      callback(null,data)}
-    );
+    // query the restaurantsDb for the restaurantsStore to avoid going to the network
+    dbPromise.then(function(db){
+      var tx = db.transaction('restaurants');
+      var restaurantsStore = tx.objectStore('restaurants');
+      return restaurantsStore.getAll()
+    }).then(function(restaurants){
+      // if there restaurants stored get them
+      if (restaurants.length){
+        callback(null, restaurants)
+      } else { // if there are not already restaurants stored fetch them and put them to the idb
+        fetch("http://localhost:1337/restaurants")
+        .then(response=>response.json())
+        .then(restaurants=>{
+          restaurants.forEach((restaurant, index)=>{
+            if (restaurant.photograph){
+              restaurant.photograph_small = restaurant.photograph +  "s";
+              restaurant.photograph_medium = restaurant.photograph + "m";
+              restaurant.alt = altTags[restaurant.id]
+            }
+          })
+          // store the data from the API call to 
+          dbPromise.then(function(db){
+            var tx = db.transaction('restaurants', 'readwrite');
+            var restaurantsStore = tx.objectStore('restaurants');
+            restaurants.forEach(restaurant=>restaurantsStore.put(restaurant))
+          })
+          callback(null,restaurants)}
+        );
+      }
+    })
   }
 
   /**

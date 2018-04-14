@@ -39,7 +39,11 @@
 
 // source : https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers
 
+// importScripts('node_modules/idb/lib/idb.js');
+
 self.addEventListener("fetch", function(event) {
+  // don't cache the data received from the API call but store them to the indexDb
+  if (!event.request.url.includes("localhost:1337")){
   event.respondWith(
     caches.open("restaurants-static-v2").then(function(cache) {
       return cache.match(event.request).then(function(response) {
@@ -52,5 +56,5 @@ self.addEventListener("fetch", function(event) {
         );
       });
     })
-  );
+  )} 
 });
