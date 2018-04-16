@@ -146,7 +146,10 @@ createRestaurantHTML = restaurant => {
   if (DBHelper.smallImageUrlForRestaurant(restaurant)){
   const image = document.createElement("img");
   image.className = "restaurant-img";
-  image.src = DBHelper.smallImageUrlForRestaurant(restaurant)
+  image.dataset.echo = DBHelper.smallImageUrlForRestaurant(restaurant);
+  image.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+
+
   image.alt = DBHelper.imageAltTagForRestaurant(restaurant);
   li.append(image);
   }
