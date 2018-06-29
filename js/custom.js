@@ -1,8 +1,14 @@
 var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
-  upgradeDb.createObjectStore('restaurantReviews', {keyPath: 'restaurant_id'}) 
+  upgradeDb.createObjectStore('restaurantReviews', {keyPath: 'review_id'}) 
 });
-
+let review;
+let review_id = 0;
 // add a review
+
+// function postReview(url, review){
+
+// }
+
 const addReview = document.forms["add-review"];
 addReview.addEventListener("submit", function(e) {
     e.preventDefault()
@@ -12,7 +18,7 @@ addReview.addEventListener("submit", function(e) {
     console.log("userName", userName);
     console.log("userReview", userReview);
     const url = 'http://localhost:1337/reviews/';
-    const review = {
+    review = {    
     'restaurant_id':  parseInt(window.location.search.slice(4)),
     'name': userName,
     //'rating': 5,
@@ -26,18 +32,62 @@ addReview.addEventListener("submit", function(e) {
         }
     }).then(res => res.json())
     .catch(error => {
-        // How to check for a 404 response?? After you check for 404 store to idb 
+        // On network error  
+        let storedReviews;
         dbPromise.then(function(db){
-        var tx = db.transaction('restaurantReviews', 'readwrite');
-        var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
-        restaurantsReviewsStore.put(review);
-        })
-        console.error('My custom error message:', error)})
+            var tx = db.transaction('restaurantReviews');
+            var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
+            return restaurantsReviewsStore.getAll();
+          }).then(restaurantReviews=>{ 
+              storedReviews=restaurantReviews.length;// count how many reviews are already stored
+              dbPromise.then(function(db){// and add the new review incrementing the id
+                var tx = db.transaction('restaurantReviews', 'readwrite');
+                var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
+                console.log("spread", Object.assign(review,{"review_id":1 + storedReviews}));
+                restaurantsReviewsStore.put(Object.assign(review,{"review_id":1 + storedReviews}));
+                tx.complete.then(  ()=>console.log("transaction completed"))
+                })
+            })
+    })
     .then(response => {
         console.log('Success:', response);
         addReview.reset(); //reset form
     }  );    
 });
+
+// when we get back online collect the reviews and post them
+window.addEventListener("online", function(event){
+    console.log("You are now back online.", event);
+    dbPromise.then(function(db){
+        var tx = db.transaction('restaurantReviews');
+        var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
+        return restaurantsReviewsStore.getAll();
+      }).then(restaurantReviews=>{
+          //console.log("restaurantReviews",restaurantReviews)
+          restaurantReviews.forEach(restaurantReview=>
+            {
+                const url = 'http://localhost:1337/reviews/';
+                fetch(url, {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(restaurantReview), // data can be `string` or {object}!
+                    headers:{
+                    'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json())
+                // delete the review from the idb
+                .then( ()=> {
+                    dbPromise.then(function(db){
+                        var tx = db.transaction('restaurantReviews', 'readwrite');
+                        tx.objectStore('restaurantReviews').delete(restaurantReview.review_id);
+                      })
+                }
+                )
+            }
+        )
+    })
+});
+
+
 
 
 const starButton = document.querySelector('#star');
