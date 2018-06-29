@@ -61,12 +61,17 @@
   <script src="js/idb.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNTK9pGwNgS1za5Nr-J94pYC32EGLD58s&libraries=places&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcildoixUMsu0I36dvOBapbuUUozC2QAs&libraries=places&callback=initMap"></script>
   <script type="application/javascript">
   if (navigator.serviceWorker) {
   navigator.serviceWorker
     .register("/sw.js")
     .then(() => console.log("Yeah"), error => console.log(error));
+
+  // navigator.serviceWorker.ready.then(function(swRegistration) {
+  // return swRegistration.sync.register('submitReview');
+  //   });
+
 }
 </script>
   <script>

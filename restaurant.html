@@ -40,7 +40,10 @@
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <h2 id="restaurant-name"></h2>
+      <div id="restaurant-name-container">
+      <button id="star">&#9733;</button>
+      <h2 id="restaurant-name"></h2>  
+    </div>
       <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
@@ -52,6 +55,22 @@
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
+    <!-- Beginning form -->
+    <section id="form-container">
+        <h3>Submit a new review </h3>
+      <form id="add-review">
+        <div id="name">
+          <label for="name">Name:</label>
+          <input type="text" id="user_name" name="user_name">
+        </div>
+        <div id="form-reviewCont">
+          <label for="review">Review:</label>
+          <textarea id="user_review" name="user_review" style="width:70%"></textarea>
+        </div>
+        <button id="form-button">Submit review</button>
+      </form>
+    </section>
+    <!-- End form -->
   </main>
   <!-- End main -->
 
@@ -68,9 +87,9 @@
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNTK9pGwNgS1za5Nr-J94pYC32EGLD58s&libraries=places&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcildoixUMsu0I36dvOBapbuUUozC2QAs&libraries=places&callback=initMap"></script>
   <!-- End scripts -->
-  
+  <script src="js/custom.js"></script>
 
 
 </body>

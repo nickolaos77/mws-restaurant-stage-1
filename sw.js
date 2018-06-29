@@ -42,6 +42,9 @@
 // importScripts('node_modules/idb/lib/idb.js');
 
 self.addEventListener("fetch", function(event) {
+  if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+    return;
+  }
   // don't cache the data received from the API call but store them to the indexDb
   if (!event.request.url.includes("localhost:1337")){
   event.respondWith(
@@ -58,3 +61,9 @@ self.addEventListener("fetch", function(event) {
     })
   )} 
 });
+
+// self.addEventListener('sync', function(event) {
+//   if (event.tag == 'submitReview') {
+//     event.waitUntil(doSomeStuff());
+//   }
+// });
