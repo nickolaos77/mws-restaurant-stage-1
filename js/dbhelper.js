@@ -33,7 +33,7 @@ class DBHelper {
   static fetchRestaurants(callback) {
     // query the restaurantsDb for the restaurantsStore to avoid going to the network
     dbPromise.then(function(db){
-      var tx = db.transaction('restaurants');
+      var tx = db.transaction('restaurants', "readwrite");
       var restaurantsStore = tx.objectStore('restaurants');
       return restaurantsStore.getAll()
     }).then(function(restaurants){

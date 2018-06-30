@@ -35,7 +35,7 @@ addReview.addEventListener("submit", function(e) {
         // On network error  
         let storedReviews;
         dbPromise.then(function(db){
-            var tx = db.transaction('restaurantReviews');
+            var tx = db.transaction('restaurantReviews', "readwrite");
             var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
             return restaurantsReviewsStore.getAll();
           }).then(restaurantReviews=>{ 
@@ -59,7 +59,7 @@ addReview.addEventListener("submit", function(e) {
 window.addEventListener("online", function(event){
     console.log("You are now back online.", event);
     dbPromise.then(function(db){
-        var tx = db.transaction('restaurantReviews');
+        var tx = db.transaction('restaurantReviews', "readwrite");
         var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
         return restaurantsReviewsStore.getAll();
       }).then(restaurantReviews=>{
