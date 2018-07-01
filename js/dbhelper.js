@@ -13,9 +13,7 @@ var altTags = {
  * Common database helper functions.
  */
 
-var dbPromise = idb.open("restaurantsDb",1, function(upgradeDb){
-  upgradeDb.createObjectStore('restaurants', {keyPath: 'id'}) 
-});
+
 
 class DBHelper {
   /**
@@ -31,6 +29,10 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+
+    var dbPromise = idb.open("restaurantsDb",1, function(upgradeDb){
+      upgradeDb.createObjectStore('restaurants', {keyPath: 'id'}) 
+    });
     // query the restaurantsDb for the restaurantsStore to avoid going to the network
     dbPromise.then(function(db){
       var tx = db.transaction('restaurants', "readwrite");

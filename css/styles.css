@@ -295,7 +295,6 @@ nav h1 a {
 }
 
 form {
-  background-color: green;
   display: flex;
   flex-direction: column;
 }
@@ -312,6 +311,16 @@ form {
   margin: auto;
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+#rating-container {
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#rating-container input{
+  width: 25px;
 }
 
 #form-button {

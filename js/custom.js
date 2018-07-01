@@ -13,15 +13,24 @@ const addReview = document.forms["add-review"];
 addReview.addEventListener("submit", function(e) {
     e.preventDefault()
     console.log(e);
+    console.log(addReview);
+    
     const userName = addReview.querySelector('#user_name').value;
     const userReview = addReview.querySelector('#user_review').value; 
+    let rating = addReview.querySelector('#rating').value - 0;
+    console.log('rating', rating);
+    if ( ![1,2,3,4,5].includes(rating) ){
+        rating = undefined;
+    }
     console.log("userName", userName);
     console.log("userReview", userReview);
+    console.log('rating', rating);
+    
     const url = 'http://localhost:1337/reviews/';
     review = {    
     'restaurant_id':  parseInt(window.location.search.slice(4)),
     'name': userName,
-    //'rating': 5,
+    'rating': rating,
     'comments': userReview
 };
     fetch(url, {
@@ -87,11 +96,7 @@ window.addEventListener("online", function(event){
     })
 });
 
-
-
-
 const starButton = document.querySelector('#star');
-
 let favoriteRestaurantsIds=[];
 document.addEventListener('DOMContentLoaded', function() {
     fetch("http://localhost:1337/restaurants/?is_favorite=true")
@@ -119,4 +124,3 @@ starButton.addEventListener('click', function toggleFavorite(){
         "/?is_favorite=false", {method:'PUT'});
     }
 })
-
