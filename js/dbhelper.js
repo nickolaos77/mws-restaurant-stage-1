@@ -47,18 +47,32 @@ class DBHelper {
         .then(response=>response.json())
         .then(restaurants=>{
           restaurants.forEach((restaurant, index)=>{
-            if (restaurant.photograph){
-              restaurant.photograph_small = restaurant.photograph +  "s";
-              restaurant.photograph_medium = restaurant.photograph + "m";
-              restaurant.alt = altTags[restaurant.id]
-            }
+
+            const reviewsCollection = [];
+
+            fetch("http://localhost:1337/reviews/?restaurant_id="+ restaurant.id)
+            .then(response=>response.json())
+            .then(reviews=>{
+              restaurant.reviews=reviews;
+              if (restaurant.photograph){
+                restaurant.photograph_small = restaurant.photograph +  "s";
+                restaurant.photograph_medium = restaurant.photograph + "m";
+                restaurant.alt = altTags[restaurant.id]
+              }
+              dbPromise.then(function(db){
+                var tx = db.transaction('restaurants', 'readwrite');
+                var restaurantsStore = tx.objectStore('restaurants');
+                restaurantsStore.put(restaurant)
+              })
+
+
+
+            } )
+
+
           })
           // store the data from the API call to 
-          dbPromise.then(function(db){
-            var tx = db.transaction('restaurants', 'readwrite');
-            var restaurantsStore = tx.objectStore('restaurants');
-            restaurants.forEach(restaurant=>restaurantsStore.put(restaurant))
-          })
+
           callback(null,restaurants)}
         );
       }
