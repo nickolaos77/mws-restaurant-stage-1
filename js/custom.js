@@ -8,6 +8,7 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
   // function postReview(url, review){
   
   // }
+
   
   const addReview = document.forms["add-review"];
   addReview.addEventListener("submit", function(e) {
@@ -33,17 +34,30 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
       }).then(res => res.json())
       .catch(error => {
           // On network error  
-          dbPromise.then(function(db){
+          console.log("network error");
+          
+           return dbPromise.then(function(db){
               var tx = db.transaction('restaurantReviews');
               var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
               return restaurantsReviewsStore.getAll();
-            }).then(restaurantReviews=>{ 
-                 const storedReviews=restaurantReviews.length;// count how many reviews are already stored
+            })
+            .then (restaurantReviews=>{ 
+                console.log(restaurantReviews);
+                
+               const storedReviews=restaurantReviews.length;// count how many reviews are already stored
                 dbPromise.then(function(db){// and add the new review incrementing the id
-                  var tx = db.transaction('restaurantReviews', 'readwrite');
-                  var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
-                  restaurantsReviewsStore.put(Object.assign(review,{"review_id":1 + storedReviews}));
-                   tx.complete.then(  ()=>console.log("transaction completed"))
+                    console.log("THE DATABASE", db)
+                   var tx = db.transaction('restaurantReviews', 'readwrite');
+                   var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
+                   console.log('restaurantsReviewsStore', restaurantsReviewsStore);
+                   
+                   var reviewWithId = Object.assign(review,{"review_id":1 + storedReviews})
+                   console.log('reviewWithId', reviewWithId);
+                   
+                    restaurantsReviewsStore.put(reviewWithId)
+                    ;
+                   return tx.complete.then(  ()=>console.log("transaction completed")).catch(error=>console.log(error));
+                   
                   })
               })
       })
