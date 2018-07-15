@@ -33,50 +33,47 @@ class DBHelper {
     var dbPromise = idb.open("restaurantsDb",1, function(upgradeDb){
       upgradeDb.createObjectStore('restaurants', {keyPath: 'id'}) 
     });
+
+    var restaurantsContainer = [];
+    var currentRestaurant;
+
+    if (navigator.onLine){ 
+      fetch("http://localhost:1337/restaurants")
+      .then(response=>response.json()).then(restaurants=>{
+        return Promise.all( restaurants.map( restaurant=> 
+          fetch("http://localhost:1337/reviews/?restaurant_id="+ restaurant.id )
+          .then(response=>response.json())
+          .then(reviews=>{ 
+            restaurant.reviews=reviews
+          if (restaurant.photograph){
+            restaurant.photograph_small = restaurant.photograph +  "s";
+            restaurant.photograph_medium = restaurant.photograph + "m";
+            restaurant.alt = altTags[restaurant.id]
+            }
+            dbPromise.then(function(db){
+                      var tx = db.transaction('restaurants', 'readwrite');
+                      var restaurantsStore = tx.objectStore('restaurants');
+                      restaurantsStore.put(restaurant)})
+                      console.log(restaurant);
+                      
+                      return restaurant
+          })
+      )
+    ).then(restaurants=>callback(null,restaurants)
+    )// end Promise.all
+  })// end restaurants
+    } else { //if there is no connection
     // query the restaurantsDb for the restaurantsStore to avoid going to the network
     dbPromise.then(function(db){
       var tx = db.transaction('restaurants', "readwrite");
       var restaurantsStore = tx.objectStore('restaurants');
       return restaurantsStore.getAll()
     }).then(function(restaurants){
-      // if there restaurants stored get them
       if (restaurants.length){
         callback(null, restaurants)
-      } else { // if there are not already restaurants stored fetch them and put them to the idb
-        fetch("http://localhost:1337/restaurants")
-        .then(response=>response.json())
-        .then(restaurants=>{
-          restaurants.forEach((restaurant, index)=>{
-
-            const reviewsCollection = [];
-
-            fetch("http://localhost:1337/reviews/?restaurant_id="+ restaurant.id)
-            .then(response=>response.json())
-            .then(reviews=>{
-              restaurant.reviews=reviews;
-              if (restaurant.photograph){
-                restaurant.photograph_small = restaurant.photograph +  "s";
-                restaurant.photograph_medium = restaurant.photograph + "m";
-                restaurant.alt = altTags[restaurant.id]
-              }
-              dbPromise.then(function(db){
-                var tx = db.transaction('restaurants', 'readwrite');
-                var restaurantsStore = tx.objectStore('restaurants');
-                restaurantsStore.put(restaurant)
-              })
-
-
-
-            } )
-
-
-          })
-          // store the data from the API call to 
-
-          callback(null,restaurants)}
-        );
       }
     })
+  }
   }
 
   /**

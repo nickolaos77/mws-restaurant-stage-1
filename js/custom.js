@@ -1,5 +1,5 @@
 var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
-    upgradeDb.createObjectStore('restaurantReviews', {keyPath: 'review_id'}) 
+    upgradeDb.createObjectStore('restaurantReviews', {keyPath: 'name'}) 
   });
   let review;
   let review_id = 0;
@@ -36,30 +36,30 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
           // On network error  
           console.log("network error");
           
-           return dbPromise.then(function(db){
-              var tx = db.transaction('restaurantReviews');
-              var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
-              return restaurantsReviewsStore.getAll();
-            })
-            .then (restaurantReviews=>{ 
-                console.log(restaurantReviews);
+        //    return dbPromise.then(function(db){
+        //       var tx = db.transaction('restaurantReviews');
+        //       var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
+        //       return restaurantsReviewsStore.getAll();
+        //     })
+            //.then (restaurantReviews=>{ 
+              //  console.log(restaurantReviews);
                 
-               const storedReviews=restaurantReviews.length;// count how many reviews are already stored
+               //const storedReviews=restaurantReviews.length;// count how many reviews are already stored
                 dbPromise.then(function(db){// and add the new review incrementing the id
                     console.log("THE DATABASE", db)
                    var tx = db.transaction('restaurantReviews', 'readwrite');
                    var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
                    console.log('restaurantsReviewsStore', restaurantsReviewsStore);
                    
-                   var reviewWithId = Object.assign(review,{"review_id":1 + storedReviews})
-                   console.log('reviewWithId', reviewWithId);
+                   // var reviewWithId = Object.assign(review,{"review_id":1 + storedReviews})
+                   console.log('reviewWithId', review);
                    
-                    restaurantsReviewsStore.put(reviewWithId)
+                    restaurantsReviewsStore.put(review)
                     ;
                    return tx.complete.then(  ()=>console.log("transaction completed")).catch(error=>console.log(error));
                    
                   })
-              })
+              //})
       })
       .then(response => {
           console.log('Success:', response);
@@ -78,6 +78,23 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
             //console.log("restaurantReviews",restaurantReviews)
             restaurantReviews.forEach(restaurantReview=>
               {
+            // populate the restaurant collection with the new review
+                idb.open("restaurantsDb").then(function(db){
+                    var tx = db.transaction('restaurants');
+                    var restaurantsStore = tx.objectStore('restaurants');
+                    return restaurantsStore.getAll();
+                  })
+                  .then(restaurants=>{
+                      var matchingRestaurant = restaurants.find( restaurant => restaurant.id === restaurantReview.restaurant_id)
+                      matchingRestaurant.reviews.push(restaurantReview);
+                      idb.open("restaurantsDb").then(function(db){
+                        var tx = db.transaction('restaurants', 'readwrite');
+                        var restaurantsStore = tx.objectStore('restaurants');
+                        restaurantsStore.put(matchingRestaurant);
+                        return tx.complete.then(  ()=>console.log("transaction completed"))
+                      })
+                  })  
+
                   const url = 'http://localhost:1337/reviews/';
                   fetch(url, {
                       method: 'POST', // or 'PUT'
@@ -95,7 +112,7 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
                   }
                   )
               }
-          )
+          ) 
       })
   });
   
