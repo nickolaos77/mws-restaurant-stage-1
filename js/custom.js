@@ -1,5 +1,5 @@
 var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
-    upgradeDb.createObjectStore('restaurantReviews', {keyPath: 'name'}) 
+    upgradeDb.createObjectStore('restaurantReviews', {keyPath: 'review_id'}) 
   });
   let review;
   let review_id = 0;
@@ -36,30 +36,30 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
           // On network error  
           console.log("network error");
           
-        //    return dbPromise.then(function(db){
-        //       var tx = db.transaction('restaurantReviews');
-        //       var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
-        //       return restaurantsReviewsStore.getAll();
-        //     })
-            //.then (restaurantReviews=>{ 
-              //  console.log(restaurantReviews);
+           return dbPromise.then(function(db){
+              var tx = db.transaction('restaurantReviews');
+              var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
+              return restaurantsReviewsStore.getAll();
+            })
+            .then (restaurantReviews=>{ 
+                console.log(restaurantReviews);
                 
-               //const storedReviews=restaurantReviews.length;// count how many reviews are already stored
+               const storedReviews=restaurantReviews.length;// count how many reviews are already stored
                 dbPromise.then(function(db){// and add the new review incrementing the id
                     console.log("THE DATABASE", db)
                    var tx = db.transaction('restaurantReviews', 'readwrite');
                    var restaurantsReviewsStore = tx.objectStore('restaurantReviews');
                    console.log('restaurantsReviewsStore', restaurantsReviewsStore);
                    
-                   // var reviewWithId = Object.assign(review,{"review_id":1 + storedReviews})
-                   console.log('reviewWithId', review);
+                   var reviewWithId = Object.assign(review,{"review_id":1 + storedReviews})
+                   console.log('reviewWithId', reviewWithId);
                    
-                    restaurantsReviewsStore.put(review)
+                    restaurantsReviewsStore.put(reviewWithId)
                     ;
                    return tx.complete.then(  ()=>console.log("transaction completed")).catch(error=>console.log(error));
                    
                   })
-              //})
+              })
       })
       .then(response => {
           console.log('Success:', response);
@@ -91,7 +91,7 @@ var dbPromise = idb.open("restaurantReviewsDb",1, function(upgradeDb){
                         var tx = db.transaction('restaurants', 'readwrite');
                         var restaurantsStore = tx.objectStore('restaurants');
                         restaurantsStore.put(matchingRestaurant);
-                        return tx.complete.then(  ()=>console.log("transaction completed"))
+                        return tx.complete.then(  ()=>console.log("transaction completed")).catch(error=>console.log(error));
                       })
                   })  
 
